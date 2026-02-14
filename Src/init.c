@@ -70,9 +70,49 @@ void init_adc(void)
 	ADC1->CR2 |= ADC_CR2_CAL;
 	while(ADC1->CR2 & ADC_CR2_CAL);
 
-	//step 5 setting up sampling time of 55cycles for ch0,1,2
+	//step 5 setting adc clk
+	RCC->CFGR &= ~RCC_CFGR_ADCPRE;
+	RCC->CFGR |= RCC_CFGR_ADCPRE_DIV6;   // 72 / 6 = 12 MHz (VALID)
+
+	//step 6 setting up sampling time of 55cycles for ch0,1,2
 	ADC1->SMPR2&=~((0x7 << 0) | (0x7 << 3) | (0x7 << 6));
 	ADC1->SMPR2|=((0x6 << 0) | (0x6 << 3) | (0x6 << 6));
+}
+
+//configuring PA3 as input pin
+void init_switch(void)
+{
+    // step 1 Enable GPIOA clock
+    RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
+
+    // step 2 Clear MODE3 and CNF3 (4 bits total)
+    GPIOA->CRL &= ~(0xF << (3 * 4));
+
+    // step 3 Set CNF3 = 10 (input pull-up/pull-down)
+    GPIOA->CRL |= (0x8 << (3 * 4));
+
+    // step 4 Enable Pull-up (ODR bit = 1 → pull-up)
+    GPIOA->ODR |= (1 << 3);
+}
+
+void init_uart1(void)
+{
+	// Step 1: Enable clocks
+	RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;    // GPIOA
+	RCC->APB2ENR |= RCC_APB2ENR_USART1EN; // USART1
+
+	// Step 2: Configure PA9 (TX) as AF Push-Pull, 50MHz
+	GPIOA->CRH &= ~(0xF << 4);      // Clear bits for PA9
+	GPIOA->CRH |=  (0xB << 4);      // MODE=11 (50MHz), CNF=10 (AF PP)
+
+
+	// Step 3: Set baud rate (9600 for 72MHz)
+	USART1->BRR = (468 << 4) | 12;
+
+	// Step 5: Enable TX, RX and USART
+	USART1->CR1 |= USART_CR1_TE;  // Transmitter enable
+	USART1->CR1 |= USART_CR1_UE;  // USART enable
+
 }
 
 
