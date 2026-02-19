@@ -22,6 +22,27 @@
 #include "list.h"
 #include "queue.h"
 #include "semphr.h"
+#include <stdlib.h>
+
+// Message structure
+
+typedef struct{
+	uint8_t id;  // here id ->1=> temp,  2=>voltage, 3=> pot , 4=> switch
+	uint16_t value;
+}sensor_message;
+
+
+//RTOS HAndles
+QueueHandle_t xSensorQueue;
+SemaphoreHandle_t xADCMutex;
+
+//task protypes
+void Temperature_task(void *pvParameters);
+void Voltage_task(void *pvParameters);
+void Pot_task(void *pvParameters);
+void switchtask(void *pvParameters);
+void UART_task(void *pvParameters);
+
 
 
 
@@ -29,6 +50,37 @@
 
 int main(void)
 {
+	init_clk();
+	init_adc();
+	init_switch();
+	init_uart1();
+
+	xSensorQueue= xQueueCreate(10,sizeof(sensor_message));
+	if(xSensorQueue == NULL)
+	{
+		while(1);   //failed to create queue
+
+	}
+
+	// creating ADC mutex
+	xADCMutex=xSemaphoreCreateMutex();
+	if(xADCMutex==NULL)
+	{
+		while(1);   //Mutex creation failed
+	}
+	//xTaskCreate(taskfucntion,task name,stack size,fucntion argument,priorites,Task id)
+
+	xTaskCreate(Temperature_task,"TempTask",200,NULL,1,NULL);
+	xTaskCreate(Voltage_task,"VoltTask",200,NULL,1,NULL);
+	xTaskCreate(Pot_task,"PotTask",200,NULL,1,NULL);
+	xTaskCreate(switchtask,"switchTask", 200, NULL, 1, NULL);
+	xTaskCreate(UART_task,"UARTTask",200,NULL,2,NULL);
+
+	/*Start schduler*/
+	vTaskStartScheduler();
     /* Loop forever */
-	for(;;);
+	for(;;)
+	{
+
+	}
 }

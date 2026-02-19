@@ -28,3 +28,19 @@ uint8_t switch_read(void)
         return 1;   // Pressed (goes LOW)
 }
 
+
+void UART_Transmit(char data)
+{
+    while (!(USART2->SR & USART_SR_TXE));  // Wait until TX empty
+    USART2->DR = data;
+}
+
+
+void UART_SendString(char *str)
+{
+    while (*str)
+    {
+        UART_Transmit(*str++);
+    }
+}
+
