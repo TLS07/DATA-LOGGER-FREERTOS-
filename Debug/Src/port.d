@@ -1,4 +1,4 @@
-Src/main.o: ../Src/main.c ../Inc/main.h \
+Src/port.o: ../Src/port.c \
  C:/Users/Admin/Desktop/ip/stm/FREE_12_2/Middlewares/FreeRTOS/include/FreeRTOS.h \
  ../Inc/FreeRTOSConfig.h ../Inc/stm32f1xx.h ../Inc/stm32f103xb.h \
  ../Inc/core_cm3.h ../Inc/cmsis_version.h ../Inc/cmsis_compiler.h \
@@ -8,15 +8,8 @@ Src/main.o: ../Src/main.c ../Inc/main.h \
  C:/Users/Admin/Desktop/ip/stm/FREE_12_2/Middlewares/FreeRTOS/include/deprecated_definitions.h \
  C:/Users/Admin/Desktop/ip/stm/FREE_12_2/Middlewares/FreeRTOS/portable/GCC/ARM_CM3/portmacro.h \
  C:/Users/Admin/Desktop/ip/stm/FREE_12_2/Middlewares/FreeRTOS/include/mpu_wrappers.h \
- ../Inc/FreeRTOSConfig.h \
  C:/Users/Admin/Desktop/ip/stm/FREE_12_2/Middlewares/FreeRTOS/include/task.h \
- C:/Users/Admin/Desktop/ip/stm/FREE_12_2/Middlewares/FreeRTOS/include/list.h \
- C:/Users/Admin/Desktop/ip/stm/FREE_12_2/Middlewares/FreeRTOS/include/list.h \
- C:/Users/Admin/Desktop/ip/stm/FREE_12_2/Middlewares/FreeRTOS/include/queue.h \
- C:/Users/Admin/Desktop/ip/stm/FREE_12_2/Middlewares/FreeRTOS/include/task.h \
- C:/Users/Admin/Desktop/ip/stm/FREE_12_2/Middlewares/FreeRTOS/include/semphr.h \
- C:/Users/Admin/Desktop/ip/stm/FREE_12_2/Middlewares/FreeRTOS/include/queue.h
-../Inc/main.h:
+ C:/Users/Admin/Desktop/ip/stm/FREE_12_2/Middlewares/FreeRTOS/include/list.h
 C:/Users/Admin/Desktop/ip/stm/FREE_12_2/Middlewares/FreeRTOS/include/FreeRTOS.h:
 ../Inc/FreeRTOSConfig.h:
 ../Inc/stm32f1xx.h:
@@ -31,11 +24,5 @@ C:/Users/Admin/Desktop/ip/stm/FREE_12_2/Middlewares/FreeRTOS/include/portable.h:
 C:/Users/Admin/Desktop/ip/stm/FREE_12_2/Middlewares/FreeRTOS/include/deprecated_definitions.h:
 C:/Users/Admin/Desktop/ip/stm/FREE_12_2/Middlewares/FreeRTOS/portable/GCC/ARM_CM3/portmacro.h:
 C:/Users/Admin/Desktop/ip/stm/FREE_12_2/Middlewares/FreeRTOS/include/mpu_wrappers.h:
-../Inc/FreeRTOSConfig.h:
 C:/Users/Admin/Desktop/ip/stm/FREE_12_2/Middlewares/FreeRTOS/include/task.h:
 C:/Users/Admin/Desktop/ip/stm/FREE_12_2/Middlewares/FreeRTOS/include/list.h:
-C:/Users/Admin/Desktop/ip/stm/FREE_12_2/Middlewares/FreeRTOS/include/list.h:
-C:/Users/Admin/Desktop/ip/stm/FREE_12_2/Middlewares/FreeRTOS/include/queue.h:
-C:/Users/Admin/Desktop/ip/stm/FREE_12_2/Middlewares/FreeRTOS/include/task.h:
-C:/Users/Admin/Desktop/ip/stm/FREE_12_2/Middlewares/FreeRTOS/include/semphr.h:
-C:/Users/Admin/Desktop/ip/stm/FREE_12_2/Middlewares/FreeRTOS/include/queue.h:

@@ -20,7 +20,7 @@ extern QueueHandle_t     xSensorQueue;
 
 
 // task to read the temperature senor reading from lm35
-void Temperautre_task(void* pvParameters)
+void Temperature_task(void* pvParameters)
 {
 	/*
 	 * LM35 10mv per °c
@@ -53,7 +53,7 @@ void Temperautre_task(void* pvParameters)
 }
 
 
-void VOltage_task(void *pvParameters)
+void Voltage_task(void *pvParameters)
 {
 	/*
 	 * here using a voltage divder ciruit to measure voltage in the range
@@ -84,8 +84,104 @@ void VOltage_task(void *pvParameters)
 	}
 
 }
-xTaskCreate(Temperature_task,"TempTask",200,NULL,1,NULL);
-xTaskCreate(Voltage_task,"VoltTask",200,NULL,1,NULL);
-xTaskCreate(Pot_task,"PotTask",200,NULL,1,NULL);
-xTaskCreate(switchtask,"switchTask", 200, NULL, 1, NULL);
-xTaskCreate(UART_task,"UARTTask",200,NULL,2,NULL);
+
+void Pot_task(void *pvParameters)
+{
+	/*
+	     * Potentiometer reading:
+	     * ADC value 0-4095 → 0-100%
+	     */
+
+
+	sensor_message msg;
+	uint16_t adc_value;
+    uint8_t pot_percent;  // 0-100%
+
+    while(1)
+    {
+    	xSemaphoreTake(xADCMutex,portMAX_DELAY);
+    	adc_value=adc_read(2);     //pot connected to chnnel 2
+    	xSemaphoreGive(xADCMutex);
+
+    	//converting ADC value to percentage
+    	pot_percent=(adc_value*100UL)/4095UL;
+
+    	msg.id=3;
+    	msg.value=pot_percent;
+
+    	//send data to queue
+    	xQueueSend(xSensorQueue,&msg,portMAX_DELAY);
+
+    	vTaskDelay(pdMS_TO_TICKS(500));
+    }
+
+}
+
+
+void switchtask(void *pvParameters)
+{
+    /*
+     * Switch reading:
+     * Active low switch on PA3
+     * 0 -> Not pressed
+     * 1 -> Pressed
+     */
+
+    sensor_message msg;
+    uint8_t switch_state;
+
+    while(1)
+    {
+        // Read the switch
+        switch_state = switch_read();  // function returns 0 or 1
+
+        msg.id = 4;            // Switch ID
+        msg.value = switch_state;
+
+        // Send to queue
+        xQueueSend(xSensorQueue, &msg, portMAX_DELAY);
+
+        // Delay
+        vTaskDelay(pdMS_TO_TICKS(500));
+    }
+}
+
+void UART_task(void *pvParameters)
+{
+	sensor_message msg;
+	char buffer[50];
+
+	while(1)
+	{
+		//wait indefenitely until a message is  available in queue
+		if(xQueueReceive(xSensorQueue,&msg,portMAX_DELAY)==pdTRUE)
+		{
+			switch(msg.id)
+			{
+			case 1:  //temperature
+				 sprintf(buffer, "Temperature: %u.%u C\r\n",msg.value / 10, msg.value % 10);
+				 break;
+
+			case 2:  // voltage
+				sprintf(buffer, "Voltage: %u.%02u V\r\n",msg.value / 100, msg.value % 100);
+				break;
+
+			case 3: //pot
+				 sprintf(buffer, "Potentiometer: %u %%\r\n", msg.value);
+				 break;
+
+			 case 4: // Switch status
+				 if(msg.value)
+					 sprintf(buffer, "Switch: ON\r\n");
+				 else
+					 sprintf(buffer, "Switch: OFF\r\n");
+				 break;
+			}
+		}
+		// Send formatted string over UART
+		UART_SendString(buffer);
+	}
+}
+
+
+

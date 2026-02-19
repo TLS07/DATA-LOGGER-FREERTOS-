@@ -1,4 +1,4 @@
-Src/main.o: ../Src/main.c ../Inc/main.h \
+Src/function.o: ../Src/function.c ../Inc/main.h \
  C:/Users/Admin/Desktop/ip/stm/FREE_12_2/Middlewares/FreeRTOS/include/FreeRTOS.h \
  ../Inc/FreeRTOSConfig.h ../Inc/stm32f1xx.h ../Inc/stm32f103xb.h \
  ../Inc/core_cm3.h ../Inc/cmsis_version.h ../Inc/cmsis_compiler.h \

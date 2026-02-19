@@ -1,0 +1,4 @@
+../Src/init.c:4:6:init_clk	4	static
+../Src/init.c:36:6:init_adc	16	static
+../Src/init.c:83:6:init_switch	4	static
+../Src/init.c:98:6:init_uart1	4	static

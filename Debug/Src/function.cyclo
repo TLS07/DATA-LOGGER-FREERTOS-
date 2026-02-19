@@ -1,0 +1,4 @@
+../Src/function.c:4:10:adc_read	2
+../Src/function.c:22:9:switch_read	2
+../Src/function.c:32:6:UART_Transmit	2
+../Src/function.c:39:6:UART_SendString	2

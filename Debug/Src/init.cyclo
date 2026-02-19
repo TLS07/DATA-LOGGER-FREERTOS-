@@ -1,0 +1,4 @@
+../Src/init.c:4:6:init_clk	4
+../Src/init.c:36:6:init_adc	4
+../Src/init.c:83:6:init_switch	1
+../Src/init.c:98:6:init_uart1	1

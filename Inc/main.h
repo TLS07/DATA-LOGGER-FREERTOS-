@@ -8,6 +8,8 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
+#include "FreeRTOS.h"
+#include "FreeRTOSConfig.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -16,6 +18,7 @@
 #include "list.h"
 #include "queue.h"
 #include "semphr.h"
+//#include "port.h"
 
 #include "stm32f1xx.h"
 //task protypes
@@ -34,6 +37,15 @@ typedef struct{
 }sensor_message;
 
 
+//function protypes
+void init_clk(void);
+void init_adc(void);
+void init_switch(void);
+void init_uart1(void);
+uint8_t switch_read(void);
+void UART_Transmit(char data);
+void UART_SendString(char *str);
+uint16_t adc_read(uint8_t channel);
 
 
 

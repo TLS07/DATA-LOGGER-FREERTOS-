@@ -18,7 +18,7 @@
 
 
 #include "main.h"
-
+uint32_t SystemCoreClock = 72000000;
 
 //RTOS HAndles
 QueueHandle_t xSensorQueue;
@@ -65,3 +65,19 @@ int main(void)
 
 	}
 }
+
+
+void vApplicationMallocFailedHook(void)
+{
+    // Called if pvPortMalloc fails
+    while(1); // stop here for debugging
+}
+
+void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName)
+{
+    // Called on stack overflow
+    (void)xTask;
+    (void)pcTaskName;
+    while(1); // stop here for debugging
+}
+
