@@ -124,6 +124,15 @@ Used for communication between sensor tasks and UART task
 Decouples data collection from data transmission
 ```
 
+## ⭐Serial Output
+```
+Temperature: 26.4 C
+Voltage: 12.38 V
+Potentiometer: 54 %
+Switch: OFF
+```
+
+
 
 
 
