@@ -7,10 +7,15 @@
 - The system collects data from multiple sensors and transmits the formatted sensor data to a PC/system via UART.
 
 - Each sensor is handled by a dedicated FreeRTOS task. Since multiple sensors share the same ADC peripheral, a Mutex (Semaphore) is used to ensure safe ADC access. A Queue is used to transfer sensor data between tasks.
+- A Switch acts as the master control:
+        - When ON → Data logging enabled
+        - When OFF → Data logging disabled
 
 ## ⭐ System Architecture
 The system uses:
 - FreeRTOS Tasks
+  
+- Binary Semaphore (xSwitchSemaphore) for logging control
 
 - Queue (xSensorQueue) for inter-task communication
 
@@ -21,6 +26,7 @@ The system uses:
 - 12-bit ADC (0–4095 range)
 ### Data flow
 ```
+Switch → Enables Logging
 Sensors → Individual Tasks → Queue → UART Task → PC
 ```
 ### Sensor Message Structure
@@ -39,19 +45,20 @@ typedef struct
 | Temperature (LM35) | 1  |
 | Voltage Sensor     | 2  |
 | Potentiometer      | 3  |
-| Switch             | 4  |
 ```
 
 ## ⭐ FreeRTOS  Configuration
 ```
-| Component             | Details   |
-| --------------------- | --------- |
-| Total Tasks           | 5         |
-| UART Task Priority    | 2         |
-| Sensor Tasks Priority | 1         |
-| Queue Length          | 10        |
-| Stack Size per Task   | 200 words |
-| CPU Frequency         | 72 MHz    |
+| Component               | Details   |
+| ----------------------- | --------- |
+| Total Tasks             | 6         |
+| Switch Control Priority | 3 (Highest) |
+| UART Task Priority      | 2         |
+| Sensor Tasks Priority   | 1         |
+| Queue Length            | 10        |
+| Stack Size per Task     | 200 words |
+| CPU Frequency           | 72 MHz    |
+| Tick Rate               | 1000 Hz   |
 ```
 ## ⭐ Task Description
 ### 1) Temperature Task (Temperature_task)
@@ -83,17 +90,8 @@ typedef struct
 - Runs every 500 ms
 ```
 
-### 4) Switch Task (switchtask)
-```
-- Reads digital switch (Active LOW)
-      0 → Not Pressed
-      1 → Pressed
 
-- Sends switch status to queue
-- Runs every 500 ms
-```
-
-### 5) UART Task (UART_task)
+### ) UART Task (UART_task)
 ```
 - Lowest priority task
 - Waits indefinitely for messages from queue
@@ -129,7 +127,6 @@ Decouples data collection from data transmission
 Temperature: 26.4 C
 Voltage: 12.38 V
 Potentiometer: 54 %
-Switch: OFF
 ```
 
 
