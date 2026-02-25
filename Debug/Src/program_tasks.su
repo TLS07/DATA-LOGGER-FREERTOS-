@@ -1,5 +1,5 @@
-../Src/program_tasks.c:23:6:Temperature_task	24	static
-../Src/program_tasks.c:56:6:Voltage_task	24	static
-../Src/program_tasks.c:88:6:Pot_task	24	static
-../Src/program_tasks.c:121:6:switchtask	24	static
-../Src/program_tasks.c:149:6:UART_task	80	static
+../Src/program_tasks.c:24:6:Temperature_task	24	static
+../Src/program_tasks.c:61:6:Voltage_task	24	static
+../Src/program_tasks.c:97:6:Pot_task	24	static
+../Src/program_tasks.c:135:6:UART_task	80	static
+../Src/program_tasks.c:169:6:SwitchControlTask	16	static

@@ -1,4 +1,4 @@
-../Src/function.c:4:10:adc_read	16	static
-../Src/function.c:22:9:switch_read	4	static
-../Src/function.c:32:6:UART_Transmit	16	static
-../Src/function.c:39:6:UART_SendString	16	static
+../Src/function.c:6:10:adc_read	16	static
+../Src/function.c:24:6:UART_Transmit	16	static
+../Src/function.c:31:6:UART_SendString	16	static
+../Src/function.c:39:6:EXTI3_IRQHandler	16	static,ignoring_inline_asm

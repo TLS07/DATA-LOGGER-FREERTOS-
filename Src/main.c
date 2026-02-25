@@ -24,6 +24,8 @@ uint32_t SystemCoreClock = 72000000;
 QueueHandle_t xSensorQueue;
 SemaphoreHandle_t xADCMutex;
 
+SemaphoreHandle_t xSwitchSemaphore;
+volatile uint8_t logging_enabled=0;
 
 
 
@@ -36,6 +38,12 @@ int main(void)
 	init_switch();
 	init_uart1();
 
+	// control semaphore
+	xSwitchSemaphore=xSemaphoreCreateBinary();
+	if(xSwitchSemaphore==NULL)
+	{
+		while(1);
+	}
 	xSensorQueue= xQueueCreate(10,sizeof(sensor_message));
 	if(xSensorQueue == NULL)
 	{
@@ -49,13 +57,14 @@ int main(void)
 	{
 		while(1);   //Mutex creation failed
 	}
+
 	//xTaskCreate(taskfucntion,task name,stack size,fucntion argument,priorites,Task id)
 
 	xTaskCreate(Temperature_task,"TempTask",200,NULL,1,NULL);
 	xTaskCreate(Voltage_task,"VoltTask",200,NULL,1,NULL);
 	xTaskCreate(Pot_task,"PotTask",200,NULL,1,NULL);
-	xTaskCreate(switchtask,"switchTask", 200, NULL, 1, NULL);
 	xTaskCreate(UART_task,"UARTTask",200,NULL,2,NULL);
+	xTaskCreate(SwitchControlTask, "SwitchCtrl", 200, NULL, 3, NULL);
 
 	/*Start schduler*/
 	vTaskStartScheduler();

@@ -79,11 +79,12 @@ void init_adc(void)
 	ADC1->SMPR2|=((0x6 << 0) | (0x6 << 3) | (0x6 << 6));
 }
 
-//configuring PA3 as input pin
+//configuring PA3 as input pin and enabling interrupt
 void init_switch(void)
 {
-    // step 1 Enable GPIOA clock
+    // step 1 Enable GPIOA clock AFIOA
     RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
+    RCC->APB2ENR |= RCC_APB2ENR_AFIOEN;
 
     // step 2 Clear MODE3 and CNF3 (4 bits total)
     GPIOA->CRL &= ~(0xF << (3 * 4));
@@ -93,6 +94,17 @@ void init_switch(void)
 
     // step 4 Enable Pull-up (ODR bit = 1 → pull-up)
     GPIOA->ODR |= (1 << 3);
+
+    //step 5 conneting the EXTI     EXTICR[0] controls EXTI0,1,2,3
+    AFIO->EXTICR[0] &= ~(0xF << 12);     // EXTI3 = Port A
+
+    //step configuring EXTI 3 line
+    EXTI->IMR  |= (1 << 3);              // Unmask EXTI3
+    EXTI->FTSR |= (1 << 3);              // enabling Falling edge trigger
+
+    //enabling the IRQ
+    NVIC_EnableIRQ(EXTI3_IRQn);
+    NVIC_SetPriority(EXTI3_IRQn, 5);
 }
 
 void init_uart1(void)

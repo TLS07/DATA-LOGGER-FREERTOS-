@@ -1,4 +1,6 @@
 #include"main.h"
+extern SemaphoreHandle_t xSwitchSemaphore;
+
 //adc channel sellection and data aquire
 
 uint16_t adc_read(uint8_t channel)
@@ -19,16 +21,6 @@ uint16_t adc_read(uint8_t channel)
 	return (uint16_t)ADC1->DR;
 }
 
-uint8_t switch_read(void)
-{
-	//switch  is actie low
-    if (GPIOA->IDR & (1 << 3))
-        return 0;   // Not pressed (pull-up keeps it HIGH)
-    else
-        return 1;   // Pressed (goes LOW)
-}
-
-
 void UART_Transmit(char data)
 {
     while (!(USART2->SR & USART_SR_TXE));  // Wait until TX empty
@@ -42,5 +34,18 @@ void UART_SendString(char *str)
     {
         UART_Transmit(*str++);
     }
+}
+
+void EXTI3_IRQHandler(void)
+{
+	BaseType_t xHigherPriorityTaskWoken= pdFALSE;
+	if(EXTI->PR &(1<<3))
+	{
+		EXTI->PR =(1<<3); //clear the pending bit
+		xSemaphoreGiveFromISR(xSwitchSemaphore,&xHigherPriorityTaskWoken);
+
+		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+	}
+
 }
 

@@ -1,4 +1,4 @@
-/*
+		/*
  * main.h
  *
  *  Created on: Feb 14, 2026
@@ -21,11 +21,12 @@
 //#include "port.h"
 
 #include "stm32f1xx.h"
+void EXTI3_IRQHandler(void);
+void SwitchControlTask(void *pvParamters);
 //task protypes
 void Temperature_task(void *pvParameters);
 void Voltage_task(void *pvParameters);
 void Pot_task(void *pvParameters);
-void switchtask(void *pvParameters);
 void UART_task(void *pvParameters);
 
 
