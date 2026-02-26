@@ -91,7 +91,7 @@ typedef struct
 ```
 
 
-### ) UART Task (UART_task)
+### 4) UART Task (UART_task)
 ```
 - Lowest priority task
 - Waits indefinitely for messages from queue
